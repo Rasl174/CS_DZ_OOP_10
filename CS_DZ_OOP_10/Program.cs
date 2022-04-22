@@ -17,8 +17,8 @@ namespace CS_DZ_OOP_10
 
     class War
     {
-        private List<Unit> _firstArmy = new List<Unit>() { new Sniper("Снайпер", "Шанс 50% нанести двойной урон", 200, 100, 70), new Shooter("Стрелок", "Двойной урон", 400, 80, 80) };
-        private List<Unit> _seondArmy = new List<Unit>() { new Tank("Танк", "Толстая броня увеличена на 50", 1000, 100, 50), new Helicopter("Вертолет", "Залп 20 ракет", 50, 10, 60) };
+        private List<Army> _firstArmy = new List<Army>() { new Sniper("Снайпер", "Шанс 50% нанести двойной урон", 200, 100, 70), new Shooter("Стрелок", "Двойной урон", 400, 80, 80) };
+        private List<Army> _seondArmy = new List<Army>() { new Tank("Танк", "Толстая броня увеличена на 50", 1000, 100, 50), new Helicopter("Вертолет", "Залп 20 ракет", 50, 10, 60) };
 
         public void Fight()
         {
@@ -67,7 +67,7 @@ namespace CS_DZ_OOP_10
             }
         }
 
-        private void ShowWarInfo(List<Unit> units)
+        private void ShowWarInfo(List<Army> units)
         {
             foreach (var unit in units)
             {
@@ -75,7 +75,7 @@ namespace CS_DZ_OOP_10
             }
         }
 
-        private void CheckHealth(List<Unit> units)
+        private void CheckHealth(List<Army> units)
         {
             foreach (var unit in units)
             {
@@ -87,7 +87,7 @@ namespace CS_DZ_OOP_10
             }
         }
 
-        private void ShowUnit(List<Unit> units)
+        private void ShowUnit(List<Army> units)
         {
             foreach (var unit in units)
             {
@@ -145,7 +145,12 @@ namespace CS_DZ_OOP_10
         }
     }
 
-    class Sniper : Unit
+    class Army : Unit
+    {
+        public Army(string name, string specialDamade, int health, int damage, int armor) : base(name, specialDamade, health, damage, armor) { }
+    }
+
+    class Sniper : Army
     {
         public Sniper(string name, string specialDamade, int health, int damage, int armor) : base(name, specialDamade, health, damage, armor) { }
 
@@ -164,7 +169,7 @@ namespace CS_DZ_OOP_10
         }
     }
 
-    class Shooter : Unit
+    class Shooter : Army
     {
         public Shooter(string name, string specialDamade, int health, int damage, int armor) : base(name, specialDamade, health, damage, armor) { }
 
@@ -175,7 +180,7 @@ namespace CS_DZ_OOP_10
         }
     }
 
-    class Tank : Unit
+    class Tank : Army
     {
         public Tank(string name, string specialDamade, int health, int damage, int armor) : base(name, specialDamade, health, damage, armor) { }
 
@@ -186,7 +191,7 @@ namespace CS_DZ_OOP_10
         }
     }
 
-    class Helicopter : Unit
+    class Helicopter : Army
     {
         public Helicopter(string name, string specialDamade, int health, int damage, int armor) : base(name, specialDamade, health, damage, armor) { }
 
