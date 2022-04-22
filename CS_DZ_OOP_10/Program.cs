@@ -11,19 +11,15 @@ namespace CS_DZ_OOP_10
         static void Main(string[] args)
         {
             War war = new War();
-            List<Army> firstArmy = new List<Army>();
-            List<Army> secondArmy = new List<Army>();
-            firstArmy.Add(new Sniper("Снайпер", "Шанс 50% нанести двойной урон", 200, 100, 70));
-            firstArmy.Add(new Shooter("Стрелок", "Двойной урон", 400, 80, 80));
-            secondArmy.Add(new Tank("Танк", "Толстая броня увеличена на 50", 1000, 100, 50));
-            secondArmy.Add(new Helicopter("Вертолет", "Залп 20 ракет", 50, 10, 60));
+            Army armys = new Army();
+            armys.TakeUnits(out List<Unit> firstArmy, out List<Unit> secondArmy);
             war.Fight(firstArmy, secondArmy);
         }
     }
 
     class War
     {
-        public void Fight(List<Army> firstArmy, List<Army> secondArmy)
+        public void Fight(List<Unit> firstArmy, List<Unit> secondArmy)
         {
             Console.WriteLine("Это война!");
             Console.WriteLine("У первой страны есть");
@@ -70,7 +66,7 @@ namespace CS_DZ_OOP_10
             }
         }
 
-        private void ShowWarInfo(List<Army> units)
+        private void ShowWarInfo(List<Unit> units)
         {
             foreach (var unit in units)
             {
@@ -78,7 +74,7 @@ namespace CS_DZ_OOP_10
             }
         }
 
-        private void CheckHealth(List<Army> units)
+        private void CheckHealth(List<Unit> units)
         {
             foreach (var unit in units)
             {
@@ -90,7 +86,7 @@ namespace CS_DZ_OOP_10
             }
         }
 
-        private void ShowUnit(List<Army> units)
+        private void ShowUnit(List<Unit> units)
         {
             foreach (var unit in units)
             {
@@ -148,12 +144,19 @@ namespace CS_DZ_OOP_10
         }
     }
 
-    class Army : Unit
+    class Army
     {
-        public Army(string name, string specialDamade, int health, int damage, int armor) : base(name, specialDamade, health, damage, armor) { }
+        private List<Unit> _firstArmy = new List<Unit>() { new Sniper("Снайпер", "Шанс 50% нанести двойной урон", 200, 100, 70), new Shooter("Стрелок", "Двойной урон", 400, 80, 80) };
+        private List<Unit> _secondArmy = new List<Unit>() { new Tank("Танк", "Толстая броня увеличена на 50", 1000, 100, 50), new Helicopter("Вертолет", "Залп 20 ракет", 50, 10, 40) };
+
+        public void TakeUnits(out List<Unit> firstArmy,out List<Unit> secondArmy)
+        {
+            firstArmy = _firstArmy;
+            secondArmy = _secondArmy;
+        }
     }
 
-    class Sniper : Army
+    class Sniper : Unit
     {
         public Sniper(string name, string specialDamade, int health, int damage, int armor) : base(name, specialDamade, health, damage, armor) { }
 
@@ -172,7 +175,7 @@ namespace CS_DZ_OOP_10
         }
     }
 
-    class Shooter : Army
+    class Shooter : Unit
     {
         public Shooter(string name, string specialDamade, int health, int damage, int armor) : base(name, specialDamade, health, damage, armor) { }
 
@@ -183,7 +186,7 @@ namespace CS_DZ_OOP_10
         }
     }
 
-    class Tank : Army
+    class Tank : Unit
     {
         public Tank(string name, string specialDamade, int health, int damage, int armor) : base(name, specialDamade, health, damage, armor) { }
 
@@ -194,7 +197,7 @@ namespace CS_DZ_OOP_10
         }
     }
 
-    class Helicopter : Army
+    class Helicopter : Unit
     {
         public Helicopter(string name, string specialDamade, int health, int damage, int armor) : base(name, specialDamade, health, damage, armor) { }
 
