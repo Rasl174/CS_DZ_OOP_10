@@ -11,57 +11,60 @@ namespace CS_DZ_OOP_10
         static void Main(string[] args)
         {
             War war = new War();
-            war.Fight();
+            List<Army> firstArmy = new List<Army>();
+            List<Army> secondArmy = new List<Army>();
+            firstArmy.Add(new Sniper("Снайпер", "Шанс 50% нанести двойной урон", 200, 100, 70));
+            firstArmy.Add(new Shooter("Стрелок", "Двойной урон", 400, 80, 80));
+            secondArmy.Add(new Tank("Танк", "Толстая броня увеличена на 50", 1000, 100, 50));
+            secondArmy.Add(new Helicopter("Вертолет", "Залп 20 ракет", 50, 10, 60));
+            war.Fight(firstArmy, secondArmy);
         }
     }
 
     class War
     {
-        private List<Army> _firstArmy = new List<Army>() { new Sniper("Снайпер", "Шанс 50% нанести двойной урон", 200, 100, 70), new Shooter("Стрелок", "Двойной урон", 400, 80, 80) };
-        private List<Army> _seondArmy = new List<Army>() { new Tank("Танк", "Толстая броня увеличена на 50", 1000, 100, 50), new Helicopter("Вертолет", "Залп 20 ракет", 50, 10, 60) };
-
-        public void Fight()
+        public void Fight(List<Army> firstArmy, List<Army> secondArmy)
         {
             Console.WriteLine("Это война!");
             Console.WriteLine("У первой страны есть");
-            ShowUnit(_firstArmy);
+            ShowUnit(firstArmy);
             Console.WriteLine("А у второй страны");
-            ShowUnit(_seondArmy);
+            ShowUnit(secondArmy);
             Console.ReadKey();
 
-            while(_firstArmy.Count > 0 && _seondArmy.Count > 0)
+            while(firstArmy.Count > 0 && secondArmy.Count > 0)
             {
-                for (int i = 0; i < _firstArmy.Count - 1 || i < _seondArmy.Count - 1; i++)
+                for (int i = 0; i < firstArmy.Count - 1 || i < secondArmy.Count - 1; i++)
                 {
-                    _seondArmy[i].TakeDamage(_firstArmy[i].DoDamage(_firstArmy[i].Damage), _firstArmy[i].UpArmor(_firstArmy[i].Armor));
-                    if(_firstArmy.Count > 1)
+                    secondArmy[i].TakeDamage(firstArmy[i].DoDamage(firstArmy[i].Damage), firstArmy[i].UpArmor(firstArmy[i].Armor));
+                    if(firstArmy.Count > 1)
                     {
-                        _seondArmy[i].TakeDamage(_firstArmy[i + 1].DoDamage(_firstArmy[i + 1].Damage), _firstArmy[i + 1].UpArmor(_firstArmy[i + 1].Armor));
+                        secondArmy[i].TakeDamage(firstArmy[i + 1].DoDamage(firstArmy[i + 1].Damage), firstArmy[i + 1].UpArmor(firstArmy[i + 1].Armor));
                     }
-                    _firstArmy[i].TakeDamage(_seondArmy[i].DoDamage(_seondArmy[i].Damage), _seondArmy[i].UpArmor(_seondArmy[i].Armor));
-                    if(_seondArmy.Count > 1)
+                    firstArmy[i].TakeDamage(secondArmy[i].DoDamage(secondArmy[i].Damage), secondArmy[i].UpArmor(secondArmy[i].Armor));
+                    if(secondArmy.Count > 1)
                     {
-                        _firstArmy[i].TakeDamage(_seondArmy[i + 1].DoDamage(_seondArmy[i + 1].Damage), _seondArmy[i + 1].UpArmor(_seondArmy[i + 1].Armor));
+                        firstArmy[i].TakeDamage(secondArmy[i + 1].DoDamage(secondArmy[i + 1].Damage), secondArmy[i + 1].UpArmor(secondArmy[i + 1].Armor));
                     }
-                    CheckHealth(_firstArmy);
-                    CheckHealth(_seondArmy);
+                    CheckHealth(firstArmy);
+                    CheckHealth(secondArmy);
                 }
                 Console.WriteLine();
                 Console.WriteLine("После атаки у первой армии остались:");
-                ShowWarInfo(_firstArmy);
+                ShowWarInfo(firstArmy);
                 Console.WriteLine("А у второй армии остались:");
-                ShowWarInfo(_seondArmy);
+                ShowWarInfo(secondArmy);
                 Console.ReadLine();
             }
-            if(_firstArmy.Count == 0 && _seondArmy.Count == 0)
+            if(firstArmy.Count == 0 && secondArmy.Count == 0)
             {
                 Console.WriteLine("Обе армии потерпели поражение!");
             }
-            else if(_firstArmy.Count > 0)
+            else if(firstArmy.Count > 0)
             {
                 Console.WriteLine("Первая армия одержала победу!");
             }
-            else if(_seondArmy.Count > 0)
+            else if(secondArmy.Count > 0)
             {
                 Console.WriteLine("Вторая армия выиграла эту войну!");
             }
