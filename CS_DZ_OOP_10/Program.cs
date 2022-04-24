@@ -11,8 +11,11 @@ namespace CS_DZ_OOP_10
         static void Main(string[] args)
         {
             War war = new War();
-            Army army = new Army();
-            army.TakeUnits(out List<Unit> firstArmyUnits, out List<Unit> secondArmyUnits);
+            Army firstArmy = new Army();
+            Army secondArmy = new Army();
+            int takesConut = 0;
+            firstArmy.TakeUnits(out List<Unit> firstArmyUnits, ref takesConut);
+            secondArmy.TakeUnits(out List<Unit> secondArmyUnits, ref takesConut);
             war.Fight(firstArmyUnits, secondArmyUnits);
         }
     }
@@ -149,10 +152,17 @@ namespace CS_DZ_OOP_10
         private List<Unit> _firstArmy = new List<Unit>() { new Sniper("Снайпер", "Шанс 50% нанести двойной урон", 200, 100, 70), new Shooter("Стрелок", "Двойной урон", 400, 80, 80) };
         private List<Unit> _secondArmy = new List<Unit>() { new Tank("Танк", "Толстая броня увеличена на 50", 1000, 100, 50), new Helicopter("Вертолет", "Залп 20 ракет", 50, 10, 40) };
 
-        public void TakeUnits(out List<Unit> firstArmy, out List<Unit> secondArmy)
+        public void TakeUnits(out List<Unit> army, ref int takesConut)
         {
-            firstArmy = _firstArmy;
-            secondArmy = _secondArmy;
+            if(takesConut == 0)
+            {
+                takesConut++;
+                army = _firstArmy;
+            }
+            else
+            {
+                army = _secondArmy;
+            }
         }
     }
 
