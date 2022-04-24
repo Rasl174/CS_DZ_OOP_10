@@ -12,8 +12,7 @@ namespace CS_DZ_OOP_10
         {
             War war = new War();
             Army army = new Army();
-            army.TakeUnits(out List<Unit> firstArmyUnits);
-            army.TakeUnits(out List<Unit> secondArmyUnits);
+            army.TakeUnits(out List<Unit> firstArmyUnits, out List<Unit> secondArmyUnits);
             war.Fight(firstArmyUnits, secondArmyUnits);
         }
     }
@@ -147,18 +146,13 @@ namespace CS_DZ_OOP_10
 
     class Army
     {
-        private List<Unit> _allUnits = new List<Unit>() { new Sniper("Снайпер", "Шанс 50% нанести двойной урон", 200, 100, 70), new Shooter("Стрелок", "Двойной урон", 400, 80, 80),
-                                                          new Tank("Танк", "Толстая броня увеличена на 50", 1000, 100, 50), new Helicopter("Вертолет", "Залп 20 ракет", 50, 10, 40) };
+        private List<Unit> _firstArmy = new List<Unit>() { new Sniper("Снайпер", "Шанс 50% нанести двойной урон", 200, 100, 70), new Shooter("Стрелок", "Двойной урон", 400, 80, 80) };
+        private List<Unit> _secondArmy = new List<Unit>() { new Tank("Танк", "Толстая броня увеличена на 50", 1000, 100, 50), new Helicopter("Вертолет", "Залп 20 ракет", 50, 10, 40) };
 
-        public void TakeUnits(out List<Unit> army)
+        public void TakeUnits(out List<Unit> firstArmy, out List<Unit> secondArmy)
         {
-            army = new List<Unit>
-            {
-                _allUnits[0],
-                _allUnits[1]
-            };
-            _allUnits.Remove(_allUnits[0]);
-            _allUnits.Remove(_allUnits[0]);
+            firstArmy = _firstArmy;
+            secondArmy = _secondArmy;
         }
     }
 
