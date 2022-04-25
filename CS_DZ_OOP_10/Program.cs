@@ -11,92 +11,54 @@ namespace CS_DZ_OOP_10
         static void Main(string[] args)
         {
             War war = new War();
-            Army firstArmy = new Army();
-            Army secondArmy = new Army();
-            int takesConut = 0;
-            firstArmy.TakeUnits(out List<Unit> firstArmyUnits, ref takesConut);
-            secondArmy.TakeUnits(out List<Unit> secondArmyUnits, ref takesConut);
-            war.Fight(firstArmyUnits, secondArmyUnits);
+            Army armyFirst = new Army(new List<Unit>());
+            Army secondArmy = new Army(new List<Unit>());
+            int takesCount = 0;
+            armyFirst.TakeUnits(ref takesCount);
+            secondArmy.TakeUnits(ref takesCount);
+            war.Fight(armyFirst, secondArmy);
         }
     }
 
     class War
     {
-        public void Fight(List<Unit> firstArmy, List<Unit> secondArmy)
+        public void Fight(Army firstArmy, Army secondArmy)
         {
             Console.WriteLine("Это война!");
             Console.WriteLine("У первой страны есть");
-            ShowUnit(firstArmy);
+            firstArmy.ShowUnits();
             Console.WriteLine("А у второй страны");
-            ShowUnit(secondArmy);
+            secondArmy.ShowUnits();
             Console.ReadKey();
-
-            while(firstArmy.Count > 0 && secondArmy.Count > 0)
+            int unitsCount = 0;
+            while(firstArmy.GetCount(unitsCount) > 0 && secondArmy.GetCount(unitsCount) > 0)
             {
-                for (int i = 0; i < firstArmy.Count - 1 || i < secondArmy.Count - 1; i++)
-                {
-                    secondArmy[i].TakeDamage(firstArmy[i].DoDamage(firstArmy[i].Damage), firstArmy[i].UpArmor(firstArmy[i].Armor));
-                    if(firstArmy.Count > 1)
-                    {
-                        secondArmy[i].TakeDamage(firstArmy[i + 1].DoDamage(firstArmy[i + 1].Damage), firstArmy[i + 1].UpArmor(firstArmy[i + 1].Armor));
-                    }
-                    firstArmy[i].TakeDamage(secondArmy[i].DoDamage(secondArmy[i].Damage), secondArmy[i].UpArmor(secondArmy[i].Armor));
-                    if(secondArmy.Count > 1)
-                    {
-                        firstArmy[i].TakeDamage(secondArmy[i + 1].DoDamage(secondArmy[i + 1].Damage), secondArmy[i + 1].UpArmor(secondArmy[i + 1].Armor));
-                    }
-                    CheckHealth(firstArmy);
-                    CheckHealth(secondArmy);
-                }
+                secondArmy.TakeDamage(firstArmy.Dodamage(), firstArmy.GetArmor());
+                firstArmy.TakeDamage(secondArmy.Dodamage(), secondArmy.GetArmor());
+                firstArmy.CheckHealth();
+                secondArmy.CheckHealth();
                 Console.WriteLine();
                 Console.WriteLine("После атаки у первой армии остались:");
-                ShowWarInfo(firstArmy);
+                firstArmy.ShowUnits();
                 Console.WriteLine("А у второй армии остались:");
-                ShowWarInfo(secondArmy);
+                secondArmy.ShowUnits();
                 Console.ReadLine();
             }
-            if(firstArmy.Count == 0 && secondArmy.Count == 0)
+            if(firstArmy.GetCount(unitsCount) == 0 && secondArmy.GetCount(unitsCount) == 0)
             {
                 Console.WriteLine("Обе армии потерпели поражение!");
             }
-            else if(firstArmy.Count > 0)
+            else if(firstArmy.GetCount(unitsCount) > 0)
             {
                 Console.WriteLine("Первая армия одержала победу!");
             }
-            else if(secondArmy.Count > 0)
+            else if(secondArmy.GetCount(unitsCount) > 0)
             {
                 Console.WriteLine("Вторая армия выиграла эту войну!");
             }
         }
-
-        private void ShowWarInfo(List<Unit> units)
-        {
-            foreach (var unit in units)
-            {
-                Console.WriteLine(unit.Name + " с жизнями " + unit.Health);
-            }
-        }
-
-        private void CheckHealth(List<Unit> units)
-        {
-            foreach (var unit in units)
-            {
-                if(unit.Health <= 0)
-                {
-                    units.Remove(unit);
-                    break;
-                }
-            }
-        }
-
-        private void ShowUnit(List<Unit> units)
-        {
-            foreach (var unit in units)
-            {
-                unit.SowInfo();
-            }
-        }
     }
+ 
 
     class Unit
     {
@@ -121,7 +83,7 @@ namespace CS_DZ_OOP_10
 
         public void SowInfo()
         {
-            Console.WriteLine(Name + " его уникальная характеристика - " + UniqueCharacteristic + " его жизни " + Health + " его урон " + Damage + " его броня " + Armor);
+            Console.WriteLine();
         }
 
         public virtual int DoDamage(int damage)
@@ -138,7 +100,7 @@ namespace CS_DZ_OOP_10
         {
             if(damage > Armor)
             {
-                Health -= damage - Armor;
+                Health -= damage - armor;
             }
             else
             {
@@ -149,21 +111,80 @@ namespace CS_DZ_OOP_10
 
     class Army
     {
-        private List<Unit> _firstArmy = new List<Unit>() { new Sniper("Снайпер", "Шанс 50% нанести двойной урон", 200, 100, 70), new Shooter("Стрелок", "Двойной урон", 400, 80, 80) };
-        private List<Unit> _secondArmy = new List<Unit>() { new Tank("Танк", "Толстая броня увеличена на 50", 1000, 100, 50), new Helicopter("Вертолет", "Залп 20 ракет", 50, 10, 40) };
+        private List<Unit> _units;
 
-        public void TakeUnits(out List<Unit> army, ref int takesConut)
+        public Army(List<Unit> units)
         {
-            if(takesConut == 0)
+            _units = units;
+        }
+
+        public void TakeUnits(ref int takesCount)
+        {
+            if (takesCount == 0)
             {
-                takesConut++;
-                army = _firstArmy;
+                takesCount++;
+                _units = new List<Unit>() { new Sniper("Снайпер", "Шанс 50% нанести двойной урон", 200, 100, 70), new Shooter("Стрелок", "Двойной урон", 400, 80, 80) };
             }
             else
             {
-                army = _secondArmy;
+               _units = new List<Unit>() { new Tank("Танк", "Толстая броня увеличена на 50", 1000, 100, 50), new Helicopter("Вертолет", "Залп 20 ракет", 50, 10, 40) };
             }
         }
+
+        public void ShowUnits()
+        {
+            foreach (var unit in _units)
+            {
+                Console.WriteLine(unit.Name + " его уникальная характеристика - " + unit.UniqueCharacteristic + " его жизни " + unit.Health + " его урон " + unit.Damage + " его броня " + unit.Armor);
+            }
+        }
+
+        public int GetCount(int unitsCount)
+        {
+            unitsCount = _units.Count;
+            return unitsCount;
+        }
+
+        public void TakeDamage(int damage, int armor)
+        {
+            foreach (var unit in _units)
+            {
+                unit.TakeDamage(damage, armor);
+            }
+        }
+
+        public int Dodamage()
+        {
+            int damage = 0;
+            foreach (var unit in _units)
+            {
+                damage = unit.DoDamage(unit.Damage);
+            }
+            return damage;
+        }
+
+        public int GetArmor()
+        {
+            int armor = 0;
+            foreach (var unit in _units)
+            {
+                armor = unit.UpArmor(unit.Armor);
+            }
+            return armor;
+        }
+
+        public void CheckHealth()
+        {
+            foreach (var unit in _units)
+            {
+                if (unit.Health <= 0)
+                {
+                    _units.Remove(unit);
+                    break;
+                }
+            }
+        }
+
     }
 
     class Sniper : Unit
