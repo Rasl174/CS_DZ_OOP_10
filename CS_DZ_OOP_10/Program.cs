@@ -33,8 +33,8 @@ namespace CS_DZ_OOP_10
             int unitsCount = 0;
             while(firstArmy.GetCount(unitsCount) > 0 && secondArmy.GetCount(unitsCount) > 0)
             {
-                secondArmy.TakeDamage(firstArmy.Dodamage(), firstArmy.GetArmor());
-                firstArmy.TakeDamage(secondArmy.Dodamage(), secondArmy.GetArmor());
+                firstArmy.Attack(secondArmy);
+                secondArmy.Attack(firstArmy);
                 firstArmy.CheckHealth();
                 secondArmy.CheckHealth();
                 Console.WriteLine();
@@ -123,11 +123,11 @@ namespace CS_DZ_OOP_10
             if (takesCount == 0)
             {
                 takesCount++;
-                _units = new List<Unit>() { new Sniper("Снайпер", "Шанс 50% нанести двойной урон", 200, 100, 70), new Shooter("Стрелок", "Двойной урон", 400, 80, 80) };
+                _units = new List<Unit>() { new Sniper("Снайпер", "Шанс 50% нанести двойной урон", 500, 100, 70), new Shooter("Стрелок", "Двойной урон", 600, 80, 80) };
             }
             else
             {
-               _units = new List<Unit>() { new Tank("Танк", "Толстая броня увеличена на 50", 1000, 100, 50), new Helicopter("Вертолет", "Залп 20 ракет", 50, 10, 40) };
+               _units = new List<Unit>() { new Tank("Танк", "Толстая броня увеличена на 50", 1000, 100, 50), new Helicopter("Вертолет", "Залп 20 ракет", 100, 10, 40) };
             }
         }
 
@@ -145,34 +145,6 @@ namespace CS_DZ_OOP_10
             return unitsCount;
         }
 
-        public void TakeDamage(int damage, int armor)
-        {
-            foreach (var unit in _units)
-            {
-                unit.TakeDamage(damage, armor);
-            }
-        }
-
-        public int Dodamage()
-        {
-            int damage = 0;
-            foreach (var unit in _units)
-            {
-                damage = unit.DoDamage(unit.Damage);
-            }
-            return damage;
-        }
-
-        public int GetArmor()
-        {
-            int armor = 0;
-            foreach (var unit in _units)
-            {
-                armor = unit.UpArmor(unit.Armor);
-            }
-            return armor;
-        }
-
         public void CheckHealth()
         {
             foreach (var unit in _units)
@@ -185,6 +157,19 @@ namespace CS_DZ_OOP_10
             }
         }
 
+        public void Attack(Army army)
+        {
+            List<Unit> units = army._units;
+
+            for (int i = 0; i < _units.Count - 1 || i < units.Count - 1; i++)
+            {
+                units[i].TakeDamage(_units[i].DoDamage(_units[i].Damage), _units[i].UpArmor(_units[i].Armor));
+                if (_units.Count > 1)
+                {
+                    units[i].TakeDamage(_units[i + 1].DoDamage(_units[i + 1].Damage), _units[i + 1].UpArmor(_units[i + 1].Armor));
+                }
+            }
+        }
     }
 
     class Sniper : Unit
